@@ -1,24 +1,35 @@
 import express from "express";
 import dbConnection from "./config/db.js";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
-// Intialize app with express,
-// use cors for Frontend and Backend Connection
-// Initialize database connection
-// Use express.json for json format responses
-// Initialized app on port to start listening
-
+// Initialize app
 const app = express();
-app.use(cors());
 
+// Database connection
 dbConnection();
 
 const PORT = process.env.PORT;
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to todolist!");
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  return res.status(statusCode).json({
+    status: false,
+    statusCode,
+    message,
+  });
 });
 
+// Start server
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

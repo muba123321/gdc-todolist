@@ -21,9 +21,10 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
-
-// create our model with the schema (first parameter is collection name)
-const User = mongoose.model("user", userSchema);
+// Compare passwords
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 // need our model in our server to interact with user documents
-export default User;
+export default mongoose.model("User", userSchema);
