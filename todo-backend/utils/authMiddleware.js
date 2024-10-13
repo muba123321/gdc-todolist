@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 // function to authenticate User bofore accessing any api
 const authenticate = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1];
+  const token = req.cookies.access_token;
   if (!token) return res.status(401).send({ message: "Access denied" });
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);

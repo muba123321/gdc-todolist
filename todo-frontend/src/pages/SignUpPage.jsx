@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -13,7 +15,16 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    // Basic form validation example
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setSuccessMessage("");
+    } else {
+      console.log(formData);
+      setError("");
+      setSuccessMessage("Sign-up successful! Please log in.");
+    }
   };
 
   return (
@@ -24,55 +35,70 @@ export default function LoginPage() {
       <div className="row justify-content-center w-100">
         <div className="col-md-4">
           <div className="text-center mb-5">
-            <h1 className="display-5 fw-bold">Welcome Back!</h1>
+            <h1 className="display-5 fw-bold">Create an Account</h1>
             <p className="text-muted">
-              Log in to manage your tasks effortlessly and stay organized.
+              Sign up to start managing your tasks effortlessly.
             </p>
           </div>
           <form
             onSubmit={handleSubmit}
             className="border rounded-4 p-5 shadow-sm bg-white"
           >
-            <h2 className="text-center mb-4 fw-bold text-primary">Login</h2>
+            <h2 className="text-center mb-4 fw-bold text-primary">Sign Up</h2>
 
             {error && <div className="alert alert-danger">{error}</div>}
+            {successMessage && (
+              <div className="alert alert-success">{successMessage}</div>
+            )}
 
             <div className="mb-3">
               <label className="form-label fw-semibold">Username</label>
               <input
                 type="text"
-                className="form-control form-control-lg"
                 id="username"
-                onChange={handleChange}
+                className="form-control form-control-lg"
                 placeholder="Enter your username"
+                onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="form-label fw-semibold">Password</label>
               <input
                 type="password"
                 id="password"
                 className="form-control form-control-lg"
+                placeholder="Enter a password"
                 onChange={handleChange}
-                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label fw-semibold">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                className="form-control form-control-lg"
+                placeholder="Confirm your password"
+                onChange={handleChange}
                 required
               />
             </div>
 
             <button type="submit" className="btn btn-primary btn-lg w-100 mb-3">
-              Login
+              Sign Up
             </button>
 
             <div className="text-center">
               <p className="text-muted mb-0">
-                Don't have an account?{" "}
+                Already have an account?{" "}
                 <a
-                  href="/sign-up"
+                  href="/"
                   className="text-decoration-none text-primary fw-semibold"
                 >
-                  Sign up
+                  Log in
                 </a>
               </p>
             </div>
