@@ -16,6 +16,8 @@ export default function SignInPage() {
   const handleChange = handleFormChange(formData, setFormData, setError);
   const handleSubmit = handleFormSubmit(formData, dispatch, navigate, setError);
 
+  const goToSignUp = () => navigate("/sign-up");
+
   return (
     <div
       className="container-fluid d-flex align-items-center justify-content-center vh-100"
@@ -68,12 +70,19 @@ export default function SignInPage() {
             <div className="text-center">
               <p className="text-muted mb-0">
                 Don't have an account?{" "}
-                <a
+                {/* <a
                   href="/sign-up"
                   className="text-decoration-none text-primary fw-semibold"
                 >
                   Sign up
-                </a>
+                </a> */}
+                <span
+                  onClick={goToSignUp}
+                  className="text-decoration-none text-primary fw-semibold"
+                  style={{ cursor: "pointer" }}
+                >
+                  Sign up
+                </span>
               </p>
             </div>
           </form>
