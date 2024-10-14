@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/axios";
-import { signin } from "../redux/User/authSlice";
+
+import {
+  handleFormChange,
+  handleFormSubmit,
+} from "./controllers/formControllers";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({});
@@ -10,25 +13,8 @@ export default function SignInPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-    setError("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await api.post("/auth/signin", formData);
-      const { token } = response.data;
-      dispatch(signin({ token, username: formData.username }));
-      navigate("/todo");
-    } catch (error) {
-      setError("Invalid credentials. Please try again.");
-    }
-  };
+  const handleChange = handleFormChange(formData, setFormData, setError);
+  const handleSubmit = handleFormSubmit(formData, dispatch, navigate, setError);
 
   return (
     <div

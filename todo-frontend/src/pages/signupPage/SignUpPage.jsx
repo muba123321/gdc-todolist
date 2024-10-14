@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import api from "../utils/axios";
 import { useNavigate } from "react-router-dom";
+import {
+  handleFormChange,
+  handleSignUpSubmit,
+} from "./controllers/fromControllers";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({});
@@ -10,37 +13,16 @@ export default function SignUpPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-    setError("");
-  };
+  console.log(loading);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    // Basic form validation example
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setSuccessMessage("");
-      return;
-    }
-    const { confirmPassword, ...submitData } = formData;
-
-    // API call to create user
-    try {
-      setLoading(true);
-      const res = await api.post("/auth/signup", submitData);
-
-      setSuccessMessage("User created successfully");
-      setTimeout(() => navigate("/"), 2000);
-    } catch (err) {
-      setError("Signup failed. Please try again.");
-      setLoading(false);
-    }
-  };
+  const handleChange = handleFormChange(formData, setFormData, setError);
+  const handleSubmit = handleSignUpSubmit(
+    formData,
+    setLoading,
+    setError,
+    setSuccessMessage,
+    navigate
+  );
 
   return (
     <div

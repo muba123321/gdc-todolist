@@ -5,13 +5,14 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import SignUpPage from "./pages/SignUpPage";
-import SignInPage from "./pages/SignInPage";
-import TodoPage from "./pages/TodoPage";
+import SignUpPage from "./pages/signupPage/SignUpPage";
+import SignInPage from "./pages/signinPage/SignInPage";
+import TodoPage from "./pages/todoPage/TodoPage";
 import { useSelector } from "react-redux";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
+  console.log(token);
   return (
     <Router>
       <Routes>

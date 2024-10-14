@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { signout } from "../redux/User/authSlice";
+import { signout } from "../../redux/User/authSlice";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/axios";
+import api from "../../utils/axios";
+import {
+  addTask,
+  deleteTask,
+  fetchTasks,
+  handleLogout,
+  toggleTaskCompletion,
+  handleEditTask,
+} from "./controllers/formControllers";
 
 export default function TodoPage() {
   const [tasks, setTasks] = useState([]);
@@ -17,82 +25,82 @@ export default function TodoPage() {
   const username = useSelector((state) => state.auth.username);
 
   // Get Todo
-  const fetchTasks = async () => {
-    try {
-      const res = await api.get("/tasks");
+  // const fetchTasks = async () => {
+  //   try {
+  //     const res = await api.get("/tasks");
 
-      setTasks(res.data);
-    } catch (err) {
-      setError("Failed to load tasks. Please try again.");
-    }
-  };
+  //     setTasks(res.data);
+  //   } catch (err) {
+  //     setError("Failed to load tasks. Please try again.");
+  //   }
+  // };
 
   // Add a todo
-  const handleAddTask = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await api.post("/tasks", { title: newTask });
-      setTasks([...tasks, res.data]);
-      setNewTask("");
-    } catch {
-      setError("Failed to add task");
-    }
-  };
-  // Handle task editing
-  const handleEditTask = async () => {
-    try {
-      const res = await api.put(`/tasks/${editTask._id}`, {
-        title: editTask.title,
-      });
-      const updatedTasks = tasks.map((task) =>
-        task._id === editTask._id ? res.data : task
-      );
-      setTasks(updatedTasks);
-      setShowModal(false);
-    } catch (err) {
-      setError("Failed to update task.");
-    }
-  };
+  // const handleAddTask = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await api.post("/tasks", { title: newTask });
+  //     setTasks([...tasks, res.data]);
+  //     setNewTask("");
+  //   } catch {
+  //     setError("Failed to add task");
+  //   }
+  // };
+  // // Handle task editing
+  // const handleEditTask = async () => {
+  //   try {
+  //     const res = await api.put(`/tasks/${editTask._id}`, {
+  //       title: editTask.title,
+  //     });
+  //     const updatedTasks = tasks.map((task) =>
+  //       task._id === editTask._id ? res.data : task
+  //     );
+  //     setTasks(updatedTasks);
+  //     setShowModal(false);
+  //   } catch (err) {
+  //     setError("Failed to update task.");
+  //   }
+  // };
 
-  // Handle task deletion
-  const handleDeleteTask = async (taskId) => {
-    try {
-      await api.delete(`/tasks/${taskId}`);
-      setTasks(tasks.filter((task) => task._id !== taskId));
-    } catch (err) {
-      setError("Failed to delete task.");
-    }
-  };
+  // // Handle task deletion
+  // const handleDeleteTask = async (taskId) => {
+  //   try {
+  //     await api.delete(`/tasks/${taskId}`);
+  //     setTasks(tasks.filter((task) => task._id !== taskId));
+  //   } catch (err) {
+  //     setError("Failed to delete task.");
+  //   }
+  // };
 
-  // Handle toggling the completed status
-  const toggleTaskCompletion = async (task) => {
-    try {
-      const updatedTask = { ...task, completed: !task.completed };
-      const res = await api.put(`/tasks/${task._id}`, updatedTask);
+  // // Handle toggling the completed status
+  // const toggleTaskCompletion = async (task) => {
+  //   try {
+  //     const updatedTask = { ...task, completed: !task.completed };
+  //     const res = await api.put(`/tasks/${task._id}`, updatedTask);
 
-      const updatedTasks = tasks.map((t) =>
-        t._id === task._id ? res.data : t
-      );
-      setTasks(updatedTasks);
-    } catch (err) {
-      setError("Failed to update task status.");
-    }
-  };
+  //     const updatedTasks = tasks.map((t) =>
+  //       t._id === task._id ? res.data : t
+  //     );
+  //     setTasks(updatedTasks);
+  //   } catch (err) {
+  //     setError("Failed to update task status.");
+  //   }
+  // };
 
-  const handleLogout = async () => {
-    const res = await api.get("/auth/signout");
+  // const handleLogout = async () => {
+  //   const res = await api.get("/auth/signout");
 
-    if (!res.data.success) {
-      setError("Error logging out:", res.data);
-      return;
-    }
-    dispatch(signout());
+  //   if (!res.data.success) {
+  //     setError("Error logging out:", res.data);
+  //     return;
+  //   }
+  //   dispatch(signout());
 
-    navigate("/");
-  };
+  //   navigate("/");
+  // };
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(setTasks, setError);
   }, []);
   return (
     <div className="container mt-5">
@@ -101,7 +109,10 @@ export default function TodoPage() {
           {" "}
           {username ? username.toUpperCase() : ""} ToDo List{" "}
         </h1>
-        <button onClick={handleLogout} className="btn btn-danger">
+        <button
+          onClick={() => handleLogout(dispatch, navigate, setError)}
+          className="btn btn-danger"
+        >
           Logout
         </button>
       </header>
@@ -109,7 +120,12 @@ export default function TodoPage() {
       {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Task Addition Form */}
-      <Form onSubmit={handleAddTask} className="d-flex mb-3">
+      <Form
+        onSubmit={(e) =>
+          addTask(newTask, tasks, setTasks, setNewTask, setError)
+        }
+        className="d-flex mb-3"
+      >
         <Form.Control
           type="text"
           value={newTask}
@@ -136,7 +152,9 @@ export default function TodoPage() {
                 type="checkbox"
                 className="me-3"
                 checked={task.completed}
-                onChange={() => toggleTaskCompletion(task)}
+                onChange={() =>
+                  toggleTaskCompletion(task, tasks, setTasks, setError)
+                }
               />
               <span>{task.title}</span>
             </div>
@@ -155,7 +173,7 @@ export default function TodoPage() {
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => handleDeleteTask(task._id)}
+                onClick={() => deleteTask(task._id, tasks, setTasks, setError)}
               >
                 Delete
               </Button>
@@ -183,7 +201,12 @@ export default function TodoPage() {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleEditTask}>
+          <Button
+            variant="primary"
+            onClick={() =>
+              handleEditTask(editTask, tasks, setTasks, setShowModal, setError)
+            }
+          >
             Save Changes
           </Button>
         </Modal.Footer>
