@@ -6,15 +6,24 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: Cookies.get("access_token") || null,
+    username: Cookies.get("username") || null,
   },
   reducers: {
     signin: (state, action) => {
-      state.token = action.payload.token;
-      Cookies.set("access_token", action.payload.token, { expires: 1 });
+      const { token, username } = action.payload;
+      state.token = token;
+      state.username = username;
+      // Store token and username in cookies
+      Cookies.set("access_token", token, { expires: 1 });
+      Cookies.set("username", username, { expires: 1 });
     },
     signout: (state) => {
       state.token = null;
+      state.username = null;
+
+      // Remove cookies on signout
       Cookies.remove("access_token");
+      Cookies.remove("username");
     },
   },
 });

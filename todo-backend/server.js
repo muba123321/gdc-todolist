@@ -1,6 +1,7 @@
 import express from "express";
 import dbConnection from "./config/db.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 // Routes

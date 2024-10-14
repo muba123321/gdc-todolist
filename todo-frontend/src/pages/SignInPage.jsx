@@ -22,17 +22,10 @@ export default function SignInPage() {
     e.preventDefault();
     try {
       const response = await api.post("/auth/signin", formData);
-
-      dispatch(signin(response.data.token));
+      const { token } = response.data;
+      dispatch(signin({ token, username: formData.username }));
       navigate("/todo");
     } catch (error) {
-      // if (error.response && error.response.data) {
-      //   setError(error.response.data.message); // Use backend error message
-      // } else {
-      //   setError("An unexpected error occurred. Please try again.");
-      // }
-      console.log(error);
-      // setError(error.message);
       setError("Invalid credentials. Please try again.");
     }
   };
