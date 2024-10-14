@@ -10,11 +10,12 @@ export const signIn = async (req, res, next) => {
   try {
     // Find user by username
     const user = await User.findOne({ username });
-    if (!user) return next(errorHandler(401, "Invalid credentials"));
+    if (!user) return next(errorHandler(401, "Invalid username"));
 
     // Validate password
     const isValidPassword = await user.comparePassword(password);
-    if (!isValidPassword) return next(errorHandler(401, "Invalid credentials"));
+
+    if (!isValidPassword) return next(errorHandler(401, "Invalid password"));
 
     // Generate JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -39,11 +40,8 @@ export const signUp = async (req, res, next) => {
     const existingUser = await User.findOne({ username });
     if (existingUser) return next(errorHandler(400, "Username already exists"));
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     // Create new user
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({ username, password });
     await newUser.save();
 
     // Generate JWT token

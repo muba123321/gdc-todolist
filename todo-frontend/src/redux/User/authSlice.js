@@ -8,16 +8,16 @@ const authSlice = createSlice({
     token: Cookies.get("access_token") || null,
   },
   reducers: {
-    login: (state, action) => {
+    signin: (state, action) => {
       state.token = action.payload.token;
       Cookies.set("access_token", action.payload.token, { expires: 1 });
     },
-    logout: (state) => {
+    signout: (state) => {
       state.token = null;
       Cookies.remove("access_token");
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { signin, signout } = authSlice.actions;
 export default authSlice.reducer;

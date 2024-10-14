@@ -1,19 +1,40 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import api from "../utils/axios";
+import { signin } from "../redux/User/authSlice";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const response = await api.post("/auth/signin", formData);
+
+      dispatch(signin(response.data.token));
+      navigate("/todo");
+    } catch (error) {
+      // if (error.response && error.response.data) {
+      //   setError(error.response.data.message); // Use backend error message
+      // } else {
+      //   setError("An unexpected error occurred. Please try again.");
+      // }
+      console.log(error);
+      // setError(error.message);
+      setError("Invalid credentials. Please try again.");
+    }
   };
 
   return (

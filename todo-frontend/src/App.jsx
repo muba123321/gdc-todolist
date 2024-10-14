@@ -4,15 +4,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
+
 import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage";
+import TodoPage from "./pages/TodoPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/todo" element={<TodoPage />} />
       </Routes>
     </Router>
   );

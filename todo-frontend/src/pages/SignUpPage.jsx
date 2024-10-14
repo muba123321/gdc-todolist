@@ -1,29 +1,44 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import api from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setError("");
     // Basic form validation example
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setSuccessMessage("");
-    } else {
-      console.log(formData);
-      setError("");
-      setSuccessMessage("Sign-up successful! Please log in.");
+      return;
+    }
+    const { confirmPassword, ...submitData } = formData;
+
+    // API call to create user
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/signup", submitData);
+
+      setSuccessMessage("User created successfully");
+      setTimeout(() => navigate("/"), 2000);
+    } catch (err) {
+      setError("Signup failed. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -59,6 +74,7 @@ export default function SignUpPage() {
                 className="form-control form-control-lg"
                 placeholder="Enter your username"
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -71,6 +87,7 @@ export default function SignUpPage() {
                 className="form-control form-control-lg"
                 placeholder="Enter a password"
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
@@ -83,12 +100,17 @@ export default function SignUpPage() {
                 className="form-control form-control-lg"
                 placeholder="Confirm your password"
                 onChange={handleChange}
+                disabled={loading}
                 required
               />
             </div>
 
-            <button type="submit" className="btn btn-primary btn-lg w-100 mb-3">
-              Sign Up
+            <button
+              disabled={loading}
+              type="submit"
+              className="btn btn-primary btn-lg w-100 mb-3"
+            >
+              {loading ? "Loading..." : "Sign Up"}
             </button>
 
             <div className="text-center">
@@ -98,7 +120,7 @@ export default function SignUpPage() {
                   href="/"
                   className="text-decoration-none text-primary fw-semibold"
                 >
-                  Log in
+                  Sign in
                 </a>
               </p>
             </div>
