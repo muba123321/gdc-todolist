@@ -13,8 +13,6 @@ export default function SignUpPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  console.log(loading);
-
   const handleChange = handleFormChange(formData, setFormData, setError);
   const handleSubmit = handleSignUpSubmit(
     formData,
