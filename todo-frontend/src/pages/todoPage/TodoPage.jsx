@@ -47,7 +47,7 @@ export default function TodoPage() {
       {/* Task Addition Form */}
       <Form
         onSubmit={(e) =>
-          addTask(newTask, tasks, setTasks, setNewTask, setError)
+          addTask(e, newTask, tasks, setTasks, setNewTask, setError)
         }
         className="d-flex mb-3"
       >

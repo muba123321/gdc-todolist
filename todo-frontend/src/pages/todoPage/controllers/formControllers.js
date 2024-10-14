@@ -13,12 +13,14 @@ export const fetchTasks = async (setTasks, setError) => {
 };
 
 export const addTask = async (
+  e,
   newTask,
   tasks,
   setTasks,
   setNewTask,
   setError
 ) => {
+  e.preventDefault();
   try {
     const res = await api.post("/tasks", { title: newTask });
     setTasks([...tasks, res.data]);
