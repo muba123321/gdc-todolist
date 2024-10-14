@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { signout } from "../../redux/User/authSlice";
+
 import { useNavigate } from "react-router-dom";
-import api from "../../utils/axios";
+
 import {
   addTask,
   deleteTask,
