@@ -18,8 +18,6 @@ const authSlice = createSlice({
       Cookies.set("username", username, { expires: 1 });
     },
     signout: (state) => {
-      console.log("nnnnnnnnnn");
-      console.log(state.token);
       state.token = null;
       state.username = null;
 

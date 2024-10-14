@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import path from "path";
 
 // Initialize app
 const app = express();
@@ -23,12 +24,21 @@ app.use(
     credentials: true,
   })
 );
+
+const __dirname = path.resolve();
+
 app.use(cookieParser());
 app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.use(express.static(path.join(__dirname, "/todo-frontend/dist")));
+
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "todo-frontend", "dist", "index.html"))
+);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
