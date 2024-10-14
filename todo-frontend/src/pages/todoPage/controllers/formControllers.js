@@ -3,7 +3,9 @@ import api from "../../../utils/axios";
 
 export const fetchTasks = async (setTasks, setError) => {
   try {
+    console.log("starting to fecth");
     const res = await api.get("/tasks");
+    console.log(`fetch: ${res.data}`);
     setTasks(res.data);
   } catch (err) {
     setError("Failed to load tasks. Please try again.");
