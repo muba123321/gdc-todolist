@@ -24,6 +24,8 @@ export const signIn = async (req, res, next) => {
     // Set token in HttpOnly cookie
     res.cookie("access_token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
 
     res.status(200).json({ message: "Login successful", token });
@@ -57,6 +59,8 @@ export const signUp = async (req, res, next) => {
 
     res.cookie("access_token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
 
     res.status(201).json({ message: "User created successfully", token });

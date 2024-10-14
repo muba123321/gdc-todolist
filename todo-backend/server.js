@@ -40,6 +40,8 @@ app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "todo-frontend", "dist", "index.html"))
 );
 
+app.set("trust proxy", 1);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
