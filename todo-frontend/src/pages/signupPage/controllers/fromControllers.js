@@ -40,8 +40,10 @@ export const handleSignUpSubmit =
       // Redirect to login page after 2 seconds
       setTimeout(() => navigate("/todo"), 2000);
     } catch (err) {
-      console.log(err.response.data.message);
-      setError(`Signup failed. Please try again. ${err.response.data.message}`);
+      setError(
+        `Signup failed. Please try again. ${err.response?.data.message}` ||
+          err.message
+      );
       setLoading(false);
     }
   };
