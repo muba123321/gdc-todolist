@@ -5,17 +5,20 @@ import {
   handleFormChange,
   handleSignUpSubmit,
 } from "./controllers/fromControllers";
+import { useDispatch } from "react-redux";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = handleFormChange(formData, setFormData, setError);
   const handleSubmit = handleSignUpSubmit(
     formData,
+    dispatch,
     setLoading,
     setError,
     setSuccessMessage,
