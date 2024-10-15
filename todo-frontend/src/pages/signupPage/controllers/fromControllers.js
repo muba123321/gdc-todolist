@@ -28,15 +28,13 @@ export const handleSignUpSubmit =
 
     try {
       setLoading(true);
-      console.log("started......");
+
       const response = await api.post("/auth/signup", submitData);
-      console.log(response);
 
       const { token } = response.data;
 
       dispatch(signin({ token, username: submitData.username }));
 
-      console.log(token);
       setSuccessMessage("User created successfully");
 
       // Redirect to login page after 2 seconds
